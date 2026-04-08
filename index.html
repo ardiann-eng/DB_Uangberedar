@@ -515,38 +515,6 @@
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
 
-  /* ─── Tooltip custom ─── */
-  .custom-tooltip {
-    position: fixed;
-    pointer-events: none;
-    background: rgba(12,18,40,0.95);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 12px;
-    z-index: 999;
-    backdrop-filter: blur(20px);
-    display: none;
-    min-width: 160px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-  }
-
-  .tooltip-title {
-    font-size: 11px;
-    color: var(--muted);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .tooltip-value {
-    font-size: 18px;
-    font-weight: 700;
-    color: #fff;
-  }
-
-  .tooltip-sub { font-size: 11px; color: var(--teal); margin-top: 3px; }
-
   /* ─── Responsive ─── */
   @media (max-width: 600px) {
     .wrapper { padding: 20px 16px 40px; }
@@ -559,16 +527,14 @@
 
 <div class="wrapper">
 
-  <!-- Header -->
   <header class="header">
     <div class="header-left">
       <h1>Uang Beredar <span>Indonesia</span></h1>
-      <p>Broad Money Supply — Data Bank Indonesia, 2003–2026</p>
+      <p>Broad Money Supply & Analitik — Data Bank Indonesia, 2003–2026</p>
       <div class="badge"><span class="badge-dot"></span>Data terkini: Januari 2026</div>
     </div>
   </header>
 
-  <!-- Filters -->
   <div class="filter-row">
     <span class="filter-label">Rentang</span>
     <button class="filter-btn" onclick="setRange(5)">5 Th</button>
@@ -583,7 +549,6 @@
     <button class="filter-btn"        id="btn-kuasi"  onclick="toggleComp('kuasi')">Kuasi</button>
   </div>
 
-  <!-- KPI Cards -->
   <div class="kpi-grid">
     <div class="kpi-card gold">
       <div class="kpi-label">M2 — Des 2025</div>
@@ -611,7 +576,6 @@
     </div>
   </div>
 
-  <!-- Main Chart + Donut -->
   <div class="charts-grid">
     <div class="panel">
       <div class="panel-header">
@@ -643,7 +607,6 @@
     </div>
   </div>
 
-  <!-- Growth + Components -->
   <div class="charts-row2">
     <div class="panel">
       <div class="panel-header">
@@ -660,7 +623,7 @@
       <div class="panel-header">
         <div>
           <div class="panel-title">Uang Kartal vs Giral</div>
-          <div class="panel-sub">Miliar Rupiah, 2010–2025</div>
+          <div class="panel-sub">Miliar Rupiah, 2021–2025</div>
         </div>
       </div>
       <div class="chart-wrap" style="height:220px">
@@ -669,7 +632,31 @@
     </div>
   </div>
 
-  <!-- Table -->
+  <div class="charts-row2">
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Rasio Likuiditas (M1 terhadap M2)</div>
+          <div class="panel-sub">Mengukur persentase uang beredar yang paling likuid (siap pakai)</div>
+        </div>
+      </div>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="liquidityChart"></canvas>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Proyeksi M2 (Forecasting 5 Tahun)</div>
+          <div class="panel-sub">Estimasi historis vs proyeksi berbasis CAGR 5 Tahun terakhir</div>
+        </div>
+      </div>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="forecastChart"></canvas>
+      </div>
+    </div>
+  </div>
+
   <div class="table-panel">
     <div class="panel-header">
       <div>
@@ -732,7 +719,6 @@ const annualData = [
   { year:2025, m2:10133099,  m1:3386883,  kartal:1214729, giral:2172153, kuasi:6693748,  sb:52469 },
 ];
 
-// Monthly M2 data 2020–2025
 const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agt','Sep','Okt','Nov','Des'];
 const monthlyM2 = {
   2020:[6046651,6116495,6440457,6238267,6468194,6393744,6567725,6726135,6748574,6780845,6817457,6900049],
@@ -742,7 +728,6 @@ const monthlyM2 = {
   2024:[8721950,8739574,8891425,8926466,8968821,9015355,8983383,8975512,9047999,9082755,9175751,9210816],
   2025:[9198352,9281079,9436700,9387895,9404300,9595254,9574893,9654347,9773410,9783070,9891575,10133099],
 };
-
 const monthlyM1 = {
   2020:[1376136,1386329,1428607,1454279,1508040,1513520,1487802,1475544,1563602,1504156,1553134,1565358],
   2021:[1484403,1505491,1648681,1576401,1653611,1637751,1683194,1759639,1780721,1782244,1799087,1855625],
@@ -751,7 +736,6 @@ const monthlyM1 = {
   2024:[2422174,2403594,2408419,2472869,2423318,2466093,2438059,2410851,2482229,2497710,2510759,2675333],
   2025:[2564734,2556485,2639425,2623331,2625271,2692395,2625264,2626710,2672408,2697741,2822294,3386883],
 };
-
 const monthlyKartal = {
   2020:[616129,607961,620353,634149,685044,651818,668108,661168,674441,707854,712636,760045],
   2021:[712529,698227,692478,732644,743534,739006,758703,750510,748616,766704,775051,831234],
@@ -760,7 +744,6 @@ const monthlyKartal = {
   2024:[915931,911689,953824,943292,934144,958575,939541,954378,957150,970131,1002040,1062740],
   2025:[1010243,1008992,1088916,1025259,1033653,1039227,1042743,1082405,1095877,1108931,1148382,1214729],
 };
-
 const monthlyGiral = {
   2020:[868273,897529,1028328,942253,968566,985933,1015085,1098471,1106280,1074390,1086451,1095580],
   2021:[1049766,1086537,1134913,1118307,1118233,1176423,1174588,1187880,1219818,1304714,1339652,1450967],
@@ -769,8 +752,6 @@ const monthlyGiral = {
   2024:[1648803,1644796,1685601,1680039,1691128,1733820,1685723,1672331,1715258,1727610,1820254,1776745],
   2025:[1780132,1765908,1753788,1777229,1802365,1915886,1897512,1972249,1991273,1996300,2089302,2172153],
 };
-
-// Donut data (Des 2025)
 const donutData = {
   labels: ['Uang Kartal','Uang Giral','Uang Kuasi','Surat Berharga'],
   values: [1214729, 2172153, 6693748, 52469],
@@ -778,21 +759,13 @@ const donutData = {
 };
 
 // ═══════════════════════════════════════════════
-// STATE
+// STATE & HELPERS
 // ═══════════════════════════════════════════════
 let activeComps = new Set(['m2']);
 let chartMode   = 'annual'; // 'annual' | 'monthly'
 let rangeYears  = 0;        // 0 = all
-let trendChart, growthChart, compareChart, donutChart;
+let trendChart, growthChart, compareChart, donutChart, liquidityChart, forecastChart;
 let sortCol = 0, sortAsc = true;
-
-// ═══════════════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════════════
-function fmt(n) {
-  if (n >= 1e6) return (n/1e6).toFixed(3).replace('.',',') + ' T';
-  return n.toLocaleString('id-ID');
-}
 
 function fmtShort(n) {
   if (n >= 1e6) return (n/1e6).toFixed(2) + 'T';
@@ -819,9 +792,6 @@ const CHART_DEFAULTS = {
       bodyColor: '#e8eaf0',
       padding: 12,
       cornerRadius: 10,
-      callbacks: {
-        label: ctx => `  ${ctx.dataset.label}: ${ctx.parsed.y ? ctx.parsed.y.toLocaleString('id-ID') : '-'}`,
-      }
     }
   },
   scales: {
@@ -841,7 +811,7 @@ const CHART_DEFAULTS = {
 };
 
 // ═══════════════════════════════════════════════
-// TREND CHART
+// CHARTS INIT & UPDATE
 // ═══════════════════════════════════════════════
 const compConfig = {
   m2:     { label:'M2 Total',     color:'#f5b84c', fill: false },
@@ -851,13 +821,18 @@ const compConfig = {
   kuasi:  { label:'Uang Kuasi',   color:'#ff7c5c', fill: false },
 };
 
+function getFilteredAnnualData() {
+  let data = annualData;
+  if (rangeYears > 0) {
+    const minYear = 2025 - rangeYears + 1;
+    data = data.filter(d => d.year >= minYear);
+  }
+  return data;
+}
+
 function buildTrendDatasets() {
   if (chartMode === 'annual') {
-    let data = annualData;
-    if (rangeYears > 0) {
-      const minYear = 2025 - rangeYears + 1;
-      data = data.filter(d => d.year >= minYear);
-    }
+    const data = getFilteredAnnualData();
     const labels = data.map(d => d.year.toString());
     const datasets = [...activeComps].map(k => ({
       label: compConfig[k].label,
@@ -866,16 +841,14 @@ function buildTrendDatasets() {
       backgroundColor: compConfig[k].color + '18',
       borderWidth: 2,
       pointRadius: 3,
-      pointHoverRadius: 6,
       tension: 0.35,
-      fill: false,
     }));
     return { labels, datasets };
   } else {
-    // monthly 5-year
+    // monthly 5-year fixed
     const years = [2021,2022,2023,2024,2025];
     const labels = [];
-    const vals   = { m2:[],m1:[],kartal:[],giral:[],kuasi:[] };
+    const vals   = { m2:[],m1:[],kartal:[],giral:[] };
     years.forEach(y => {
       months.forEach((m,i) => {
         labels.push(`${m} ${y}`);
@@ -883,7 +856,6 @@ function buildTrendDatasets() {
         vals.m1.push(monthlyM1[y][i]);
         vals.kartal.push(monthlyKartal[y][i]);
         vals.giral.push(monthlyGiral[y][i]);
-        vals.kuasi.push(null); // kuasi monthly not available here
       });
     });
     const datasets = [...activeComps].filter(k => k !== 'kuasi').map(k => ({
@@ -893,9 +865,7 @@ function buildTrendDatasets() {
       backgroundColor: compConfig[k].color + '18',
       borderWidth: 1.5,
       pointRadius: 0,
-      pointHoverRadius: 5,
       tension: 0.3,
-      fill: false,
     }));
     return { labels, datasets };
   }
@@ -913,25 +883,13 @@ function initTrendChart() {
         ...CHART_DEFAULTS.plugins,
         tooltip: {
           ...CHART_DEFAULTS.plugins.tooltip,
-          callbacks: {
-            label: ctx => `  ${ctx.dataset.label}: ${ctx.parsed.y ? ctx.parsed.y.toLocaleString('id-ID') + ' M Rp' : '-'}`,
-          }
+          callbacks: { label: ctx => `  ${ctx.dataset.label}: ${ctx.parsed.y ? ctx.parsed.y.toLocaleString('id-ID') + ' M Rp' : '-'}` }
         }
       }
     }
   });
 }
 
-function updateTrendChart() {
-  const { labels, datasets } = buildTrendDatasets();
-  trendChart.data.labels   = labels;
-  trendChart.data.datasets = datasets;
-  trendChart.update();
-}
-
-// ═══════════════════════════════════════════════
-// DONUT CHART
-// ═══════════════════════════════════════════════
 function initDonut() {
   const ctx = document.getElementById('donutChart').getContext('2d');
   donutChart = new Chart(ctx, {
@@ -943,185 +901,167 @@ function initDonut() {
         backgroundColor: donutData.colors.map(c => c + 'cc'),
         borderColor: donutData.colors,
         borderWidth: 1.5,
-        hoverBorderWidth: 2,
-        hoverOffset: 6,
       }]
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '70%',
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: 'rgba(12,18,40,0.97)',
-          borderColor: 'rgba(255,255,255,0.08)',
-          borderWidth: 1,
-          bodyColor: '#e8eaf0',
-          padding: 12,
-          cornerRadius: 10,
-          callbacks: {
-            label: ctx => `  ${ctx.parsed.toLocaleString('id-ID')} M Rp (${(ctx.parsed / donutData.values.reduce((a,b)=>a+b,0)*100).toFixed(1)}%)`,
-          }
-        }
-      }
-    }
+    options: { cutout: '70%', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
   });
-
-  // Legend
   const total = donutData.values.reduce((a,b)=>a+b,0);
   const leg = document.getElementById('donut-legend');
   donutData.labels.forEach((l,i) => {
     const pct = (donutData.values[i]/total*100).toFixed(1);
-    leg.innerHTML += `
-      <div class="legend-item">
-        <div class="legend-left">
-          <div class="legend-dot" style="background:${donutData.colors[i]}"></div>
-          <span>${l}</span>
-        </div>
-        <span class="legend-pct">${pct}%</span>
-      </div>`;
+    leg.innerHTML += `<div class="legend-item"><div class="legend-left"><div class="legend-dot" style="background:${donutData.colors[i]}"></div><span>${l}</span></div><span class="legend-pct">${pct}%</span></div>`;
   });
 }
 
-// ═══════════════════════════════════════════════
-// GROWTH CHART
-// ═══════════════════════════════════════════════
 function initGrowthChart() {
-  const data = annualData.filter(d => d.year >= 2010);
+  const ctx = document.getElementById('growthChart').getContext('2d');
+  growthChart = new Chart(ctx, { type: 'bar', data: { labels: [], datasets: [] }, options: { ...CHART_DEFAULTS, scales: { y: { ...CHART_DEFAULTS.scales.y, ticks: { callback: v => v + '%' } } } } });
+  updateGrowthChart();
+}
+
+function updateGrowthChart() {
+  let data = annualData;
+  if (rangeYears > 0) {
+      // Need prev year for growth calc, so fetch minYear - 1
+      const minYear = 2025 - rangeYears + 1;
+      data = annualData.filter(d => d.year >= minYear - 1);
+  }
   const labels = data.slice(1).map(d => d.year.toString());
   const growths = data.slice(1).map((d, i) => parseFloat(growth(d.m2, data[i].m2)));
-
-  const ctx = document.getElementById('growthChart').getContext('2d');
-  growthChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [{
-        label: 'Pertumbuhan M2 YoY (%)',
-        data: growths,
-        backgroundColor: growths.map(g => g >= 0 ? 'rgba(56,217,192,0.6)' : 'rgba(241,107,107,0.6)'),
-        borderColor: growths.map(g => g >= 0 ? '#38d9c0' : '#f16b6b'),
-        borderWidth: 1,
-        borderRadius: 4,
-      }]
-    },
-    options: {
-      ...CHART_DEFAULTS,
-      scales: {
-        ...CHART_DEFAULTS.scales,
-        y: {
-          ...CHART_DEFAULTS.scales.y,
-          ticks: {
-            color: '#7a84a0',
-            font: { family:'Sora', size:10 },
-            callback: v => v + '%',
-          }
-        }
-      },
-      plugins: {
-        ...CHART_DEFAULTS.plugins,
-        tooltip: {
-          ...CHART_DEFAULTS.plugins.tooltip,
-          callbacks: {
-            label: ctx => `  YoY: ${ctx.parsed.y.toFixed(1)}%`,
-          }
-        }
-      }
-    }
-  });
+  
+  growthChart.data = {
+    labels,
+    datasets: [{
+      label: 'Pertumbuhan M2 YoY (%)',
+      data: growths,
+      backgroundColor: growths.map(g => g >= 0 ? 'rgba(56,217,192,0.6)' : 'rgba(241,107,107,0.6)'),
+      borderColor: growths.map(g => g >= 0 ? '#38d9c0' : '#f16b6b'),
+      borderWidth: 1, borderRadius: 4,
+    }]
+  };
+  growthChart.update();
 }
 
-// ═══════════════════════════════════════════════
-// COMPARE CHART (Kartal vs Giral monthly)
-// ═══════════════════════════════════════════════
 function initCompareChart() {
-  const years  = [2021,2022,2023,2024,2025];
-  const labels = [];
-  const kartal = [], giral = [];
-
+  const years = [2021,2022,2023,2024,2025];
+  const labels = [], kartal = [], giral = [];
   years.forEach(y => {
     months.forEach((m,i) => {
-      if (m === 'Jan' || m === 'Jul') labels.push(`${m}'${String(y).slice(2)}`);
-      else labels.push('');
+      labels.push((m === 'Jan' || m === 'Jul') ? `${m}'${String(y).slice(2)}` : '');
       kartal.push(monthlyKartal[y][i]);
       giral.push(monthlyGiral[y][i]);
     });
   });
-
   const ctx = document.getElementById('compareChart').getContext('2d');
   compareChart = new Chart(ctx, {
     type: 'line',
     data: {
       labels,
       datasets: [
-        {
-          label: 'Uang Kartal',
-          data: kartal,
-          borderColor: '#f5b84c',
-          backgroundColor: '#f5b84c18',
-          borderWidth: 1.8,
-          pointRadius: 0,
-          pointHoverRadius: 5,
-          tension: 0.3,
-          fill: true,
-        },
-        {
-          label: 'Uang Giral',
-          data: giral,
-          borderColor: '#38d9c0',
-          backgroundColor: '#38d9c018',
-          borderWidth: 1.8,
-          pointRadius: 0,
-          pointHoverRadius: 5,
-          tension: 0.3,
-          fill: true,
-        }
+        { label: 'Uang Kartal', data: kartal, borderColor: '#f5b84c', backgroundColor: '#f5b84c18', borderWidth: 1.8, pointRadius: 0, fill: true, tension: 0.3 },
+        { label: 'Uang Giral', data: giral, borderColor: '#38d9c0', backgroundColor: '#38d9c018', borderWidth: 1.8, pointRadius: 0, fill: true, tension: 0.3 }
       ]
     },
+    options: { ...CHART_DEFAULTS, plugins: { ...CHART_DEFAULTS.plugins, legend: { display: true, position: 'top', align: 'end', labels: { color: '#7a84a0', font: { size:10 } } } } }
+  });
+}
+
+// NEW: Liquidity Chart
+function getLiquidityData() {
+  const data = getFilteredAnnualData();
+  return {
+    labels: data.map(d => d.year.toString()),
+    datasets: [{
+      label: 'Rasio Likuiditas (M1/M2)',
+      data: data.map(d => (d.m1 / d.m2 * 100)),
+      borderColor: '#dc66cc',
+      backgroundColor: '#dc66cc18',
+      borderWidth: 2, pointRadius: 3, fill: true, tension: 0.4
+    }]
+  };
+}
+
+function initLiquidityChart() {
+  const ctx = document.getElementById('liquidityChart').getContext('2d');
+  liquidityChart = new Chart(ctx, {
+    type: 'line',
+    data: getLiquidityData(),
     options: {
       ...CHART_DEFAULTS,
+      scales: { y: { ...CHART_DEFAULTS.scales.y, ticks: { ...CHART_DEFAULTS.scales.y.ticks, callback: v => v + '%' } } },
       plugins: {
-        ...CHART_DEFAULTS.plugins,
-        legend: {
-          display: true,
-          position: 'top',
-          align: 'end',
-          labels: {
-            color: '#7a84a0',
-            font: { family:'Sora', size:10 },
-            boxWidth: 10,
-            boxHeight: 4,
-            borderRadius: 2,
-            padding: 12,
-          }
-        },
-        tooltip: {
-          ...CHART_DEFAULTS.plugins.tooltip,
-          callbacks: {
-            label: ctx => `  ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString('id-ID')} M Rp`,
-          }
-        }
+         ...CHART_DEFAULTS.plugins,
+         tooltip: { ...CHART_DEFAULTS.plugins.tooltip, callbacks: { label: ctx => `  Rasio: ${ctx.parsed.y.toFixed(1)}%` } }
       }
     }
   });
 }
 
+// NEW: Forecast Chart (CAGR)
+function initForecastChart() {
+  const baseYear = 2020;
+  const endYear = 2025;
+  const valBase = annualData.find(d => d.year === baseYear).m2;
+  const valEnd = annualData.find(d => d.year === endYear).m2;
+  const cagr = Math.pow(valEnd / valBase, 1/5) - 1; // 5-yr CAGR
+
+  const labels = [];
+  const histData = [];
+  const projData = [];
+
+  // Show last 5 years
+  annualData.filter(d => d.year >= 2021).forEach(d => {
+     labels.push(d.year.toString());
+     histData.push(d.m2);
+     projData.push(null);
+  });
+
+  projData[projData.length - 1] = valEnd; // connect line
+
+  let currentVal = valEnd;
+  for(let i=1; i<=5; i++) {
+     currentVal *= (1 + cagr);
+     labels.push((endYear + i).toString());
+     histData.push(null);
+     projData.push(currentVal);
+  }
+
+  const ctx = document.getElementById('forecastChart').getContext('2d');
+  forecastChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Historis (M2)', data: histData, borderColor: '#f5b84c', borderWidth: 2, tension: 0.3, pointRadius: 3 },
+        { label: 'Proyeksi (CAGR 5Th)', data: projData, borderColor: '#38d9c0', borderDash: [5, 5], borderWidth: 2, tension: 0.3, pointRadius: 3, pointBackgroundColor: '#06091a' }
+      ]
+    },
+    options: {
+       ...CHART_DEFAULTS,
+       plugins: {
+         ...CHART_DEFAULTS.plugins,
+         legend: { display: true, labels: { color: '#7a84a0', font: { family:'Sora', size:10 } } },
+         tooltip: { ...CHART_DEFAULTS.plugins.tooltip, callbacks: { label: ctx => `  ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString('id-ID', {maximumFractionDigits:0})} M Rp` } }
+       }
+    }
+  });
+}
+
 // ═══════════════════════════════════════════════
-// TABLE
+// TABLE & INTERACTIONS
 // ═══════════════════════════════════════════════
 function buildTable() {
   const body = document.getElementById('tableBody');
-  const q    = document.getElementById('searchBox').value.toLowerCase();
+  const q = document.getElementById('searchBox').value.toLowerCase();
   const maxM2 = Math.max(...annualData.map(d => d.m2));
-
+  
   let rows = [...annualData].filter(d => String(d.year).includes(q));
 
   rows.sort((a,b) => {
     const cols = ['year','m2','m1','kartal','giral','kuasi'];
-    const key  = cols[sortCol] || 'year';
-    const va   = sortCol === 6 ? parseFloat(growth(a.m2, annualData[annualData.findIndex(x=>x.year===a.year)-1]?.m2)||0) : a[key];
-    const vb   = sortCol === 6 ? parseFloat(growth(b.m2, annualData[annualData.findIndex(x=>x.year===b.year)-1]?.m2)||0) : b[key];
+    const key = cols[sortCol] || 'year';
+    const va = sortCol === 6 ? parseFloat(growth(a.m2, annualData[annualData.findIndex(x=>x.year===a.year)-1]?.m2)||0) : a[key];
+    const vb = sortCol === 6 ? parseFloat(growth(b.m2, annualData[annualData.findIndex(x=>x.year===b.year)-1]?.m2)||0) : b[key];
     if (va < vb) return sortAsc ? -1 : 1;
     if (va > vb) return sortAsc ?  1 : -1;
     return 0;
@@ -1129,10 +1069,8 @@ function buildTable() {
 
   body.innerHTML = rows.map(d => {
     const idx = annualData.findIndex(x => x.year === d.year);
-    const g   = idx > 0 ? growth(d.m2, annualData[idx-1].m2) : null;
-    const gTxt = g !== null
-      ? `<span class="${parseFloat(g)>=0?'growth-pos':'growth-neg'}">${parseFloat(g)>=0?'+':''}${g}%</span>`
-      : '<span style="color:var(--muted)">—</span>';
+    const g = idx > 0 ? growth(d.m2, annualData[idx-1].m2) : null;
+    const gTxt = g !== null ? `<span class="${parseFloat(g)>=0?'growth-pos':'growth-neg'}">${parseFloat(g)>=0?'+':''}${g}%</span>` : '<span style="color:var(--muted)">—</span>';
     const barW = Math.round((d.m2 / maxM2) * 80);
     return `<tr>
       <td class="year-col">${d.year}</td>
@@ -1148,8 +1086,7 @@ function buildTable() {
 
 function sortTable(col) {
   if (sortCol === col) sortAsc = !sortAsc;
-  else { sortCol = col; sortAsc = col === 0 ? false : false; sortAsc = true; }
-  // update header indicators
+  else { sortCol = col; sortAsc = col === 0 ? false : true; }
   document.querySelectorAll('th').forEach((th,i) => {
     th.classList.toggle('sorted', i === col);
     const icon = th.querySelector('.sort-icon');
@@ -1160,9 +1097,6 @@ function sortTable(col) {
 
 function filterTable() { buildTable(); }
 
-// ═══════════════════════════════════════════════
-// FILTER ACTIONS
-// ═══════════════════════════════════════════════
 function setRange(yr) {
   rangeYears = yr;
   document.querySelectorAll('.filter-row .filter-btn').forEach(b => {
@@ -1172,26 +1106,44 @@ function setRange(yr) {
     else if (yr === 0 && txt==='Semua') b.classList.add('active');
     else if (['5 Th','10 Th','Semua'].includes(txt)) b.classList.remove('active');
   });
-  updateTrendChart();
+  
+  // Update connected charts
+  const { labels, datasets } = buildTrendDatasets();
+  trendChart.data.labels = labels;
+  trendChart.data.datasets = datasets;
+  trendChart.update();
+  
+  updateGrowthChart();
+  
+  if (liquidityChart) {
+    liquidityChart.data = getLiquidityData();
+    liquidityChart.update();
+  }
 }
 
 function toggleComp(k) {
   if (activeComps.has(k)) {
-    if (activeComps.size === 1) return; // at least one must be active
+    if (activeComps.size === 1) return;
     activeComps.delete(k);
     document.getElementById('btn-'+k).classList.remove('active');
   } else {
     activeComps.add(k);
     document.getElementById('btn-'+k).classList.add('active');
   }
-  updateTrendChart();
+  const { labels, datasets } = buildTrendDatasets();
+  trendChart.data.labels = labels;
+  trendChart.data.datasets = datasets;
+  trendChart.update();
 }
 
 function setChartMode(mode, el) {
   chartMode = mode;
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
-  updateTrendChart();
+  const { labels, datasets } = buildTrendDatasets();
+  trendChart.data.labels = labels;
+  trendChart.data.datasets = datasets;
+  trendChart.update();
 }
 
 // ═══════════════════════════════════════════════
@@ -1202,6 +1154,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initDonut();
   initGrowthChart();
   initCompareChart();
+  initLiquidityChart();
+  initForecastChart();
   buildTable();
 
   // Animate KPI numbers
