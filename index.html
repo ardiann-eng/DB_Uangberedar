@@ -300,6 +300,7 @@
     font-size: 11px;
     color: var(--muted);
     margin-top: 3px;
+    line-height: 1.4;
   }
 
   .tab-group {
@@ -389,6 +390,71 @@
 
   @media (max-width: 760px) {
     .charts-row2 { grid-template-columns: 1fr; }
+  }
+
+  /* ─── Business Insights ─── */
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .insight-card {
+    background: linear-gradient(145deg, var(--glass), rgba(0,0,0,0.1));
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    display: flex;
+    gap: 14px;
+    transition: transform 0.2s, background 0.2s;
+  }
+  
+  .insight-card:hover {
+    transform: translateY(-2px);
+    background: var(--glass-b);
+    border-color: rgba(255,255,255,0.15);
+  }
+
+  .insight-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .insight-content h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  .insight-desc {
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .insight-biz {
+    font-size: 11.5px;
+    color: var(--text);
+    line-height: 1.5;
+    background: rgba(0,0,0,0.2);
+    padding: 10px 12px;
+    border-radius: 8px;
+    border-left: 2px solid var(--teal);
+  }
+  
+  .insight-biz strong {
+    color: var(--gold);
+    font-weight: 600;
   }
 
   /* ─── Table ─── */
@@ -657,6 +723,48 @@
     </div>
   </div>
 
+  <div class="panel-header" style="margin-top: 16px; margin-bottom: 20px;">
+    <div>
+      <div class="panel-title" style="font-size: 16px; color: var(--gold);">Insight Bisnis & Implementasi Strategis</div>
+      <div class="panel-sub">Bagaimana menerjemahkan data makroekonomi ini menjadi keputusan operasional di lapangan.</div>
+    </div>
+  </div>
+  
+  <div class="insights-grid">
+    <div class="insight-card">
+      <div class="insight-icon" style="color: var(--teal); background: var(--teal-dim);">📦</div>
+      <div class="insight-content">
+        <h4>Manajemen Permintaan & Produksi</h4>
+        <p class="insight-desc">Tren M2 yang bertumbuh kuat menunjukkan ekspansi likuiditas dan potensi peningkatan daya beli agregat di masyarakat.</p>
+        <p class="insight-biz" style="border-left-color: var(--teal);">
+          <strong>Hubungan Bisnis:</strong> Ini adalah sinyal untuk menyesuaikan strategi <em>Demand Management</em>. Perusahaan dapat mulai meningkatkan kapasitas pada <em>Aggregate Production Planning</em> (APP) dan memperbarui <em>Master Production Schedule</em> (MPS) guna mengantisipasi lonjakan serapan produk.
+        </p>
+      </div>
+    </div>
+    
+    <div class="insight-card">
+      <div class="insight-icon" style="color: var(--gold); background: var(--gold-dim);">📈</div>
+      <div class="insight-content">
+        <h4>Rasio Likuiditas & Prospek Pasar</h4>
+        <p class="insight-desc">Kenaikan rasio M1 terhadap M2 mengindikasikan lebih banyak perputaran kas dalam bentuk kartal dan giral yang siap langsung ditransaksikan.</p>
+        <p class="insight-biz" style="border-left-color: var(--gold);">
+          <strong>Hubungan Bisnis:</strong> Sektor ritel akan mengalami perputaran perputaran uang yang cepat. Dari sisi teknikal pasar saham, kondisi ini memberikan sentimen positif bagi emiten sektor konsumsi dan perbankan digital seiring naiknya volume transaksi harian.
+        </p>
+      </div>
+    </div>
+
+    <div class="insight-card">
+      <div class="insight-icon" style="color: var(--red); background: rgba(241,107,107,0.15);">🛡️</div>
+      <div class="insight-content">
+        <h4>Mitigasi Inflasi Rantai Pasok</h4>
+        <p class="insight-desc">Pertumbuhan YoY yang terlalu tajam dan menetap tanpa diimbangi pasokan barang seringkali menjadi indikator awal terjadinya inflasi struktural.</p>
+        <p class="insight-biz" style="border-left-color: var(--red);">
+          <strong>Hubungan Bisnis:</strong> Menuntut ketangkasan rantai pasok. Bisnis perlu segera merevisi kebijakan <em>inventory</em>, mengamankan kontrak pengadaan material lebih awal untuk mengunci harga dasar, sebelum lonjakan biaya operasional menekan margin.
+        </p>
+      </div>
+    </div>
+  </div>
+
   <div class="table-panel">
     <div class="panel-header">
       <div>
@@ -762,8 +870,8 @@ const donutData = {
 // STATE & HELPERS
 // ═══════════════════════════════════════════════
 let activeComps = new Set(['m2']);
-let chartMode   = 'annual'; // 'annual' | 'monthly'
-let rangeYears  = 0;        // 0 = all
+let chartMode   = 'annual';
+let rangeYears  = 0;
 let trendChart, growthChart, compareChart, donutChart, liquidityChart, forecastChart;
 let sortCol = 0, sortAsc = true;
 
@@ -779,34 +887,15 @@ function growth(curr, prev) {
 }
 
 const CHART_DEFAULTS = {
-  responsive: true,
-  maintainAspectRatio: false,
+  responsive: true, maintainAspectRatio: false,
   interaction: { intersect: false, mode: 'index' },
   plugins: {
     legend: { display: false },
-    tooltip: {
-      backgroundColor: 'rgba(12,18,40,0.97)',
-      borderColor: 'rgba(255,255,255,0.08)',
-      borderWidth: 1,
-      titleColor: '#7a84a0',
-      bodyColor: '#e8eaf0',
-      padding: 12,
-      cornerRadius: 10,
-    }
+    tooltip: { backgroundColor: 'rgba(12,18,40,0.97)', borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1, titleColor: '#7a84a0', bodyColor: '#e8eaf0', padding: 12, cornerRadius: 10 }
   },
   scales: {
-    x: {
-      grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
-      ticks: { color: '#7a84a0', font: { family:'Sora', size:10 } },
-    },
-    y: {
-      grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
-      ticks: {
-        color: '#7a84a0',
-        font: { family:'Sora', size:10 },
-        callback: v => fmtShort(v),
-      }
-    }
+    x: { grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false }, ticks: { color: '#7a84a0', font: { family:'Sora', size:10 } } },
+    y: { grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false }, ticks: { color: '#7a84a0', font: { family:'Sora', size:10 }, callback: v => fmtShort(v) } }
   }
 };
 
@@ -814,19 +903,16 @@ const CHART_DEFAULTS = {
 // CHARTS INIT & UPDATE
 // ═══════════════════════════════════════════════
 const compConfig = {
-  m2:     { label:'M2 Total',     color:'#f5b84c', fill: false },
-  m1:     { label:'M1',           color:'#38d9c0', fill: false },
-  kartal: { label:'Uang Kartal',  color:'#6478ff', fill: false },
-  giral:  { label:'Uang Giral',   color:'#dc66cc', fill: false },
-  kuasi:  { label:'Uang Kuasi',   color:'#ff7c5c', fill: false },
+  m2:     { label:'M2 Total',     color:'#f5b84c' },
+  m1:     { label:'M1',           color:'#38d9c0' },
+  kartal: { label:'Uang Kartal',  color:'#6478ff' },
+  giral:  { label:'Uang Giral',   color:'#dc66cc' },
+  kuasi:  { label:'Uang Kuasi',   color:'#ff7c5c' },
 };
 
 function getFilteredAnnualData() {
   let data = annualData;
-  if (rangeYears > 0) {
-    const minYear = 2025 - rangeYears + 1;
-    data = data.filter(d => d.year >= minYear);
-  }
+  if (rangeYears > 0) data = data.filter(d => d.year >= (2025 - rangeYears + 1));
   return data;
 }
 
@@ -835,37 +921,16 @@ function buildTrendDatasets() {
     const data = getFilteredAnnualData();
     const labels = data.map(d => d.year.toString());
     const datasets = [...activeComps].map(k => ({
-      label: compConfig[k].label,
-      data: data.map(d => d[k]),
-      borderColor: compConfig[k].color,
-      backgroundColor: compConfig[k].color + '18',
-      borderWidth: 2,
-      pointRadius: 3,
-      tension: 0.35,
+      label: compConfig[k].label, data: data.map(d => d[k]), borderColor: compConfig[k].color, backgroundColor: compConfig[k].color + '18', borderWidth: 2, pointRadius: 3, tension: 0.35, fill: false
     }));
     return { labels, datasets };
   } else {
-    // monthly 5-year fixed
     const years = [2021,2022,2023,2024,2025];
     const labels = [];
-    const vals   = { m2:[],m1:[],kartal:[],giral:[] };
-    years.forEach(y => {
-      months.forEach((m,i) => {
-        labels.push(`${m} ${y}`);
-        vals.m2.push(monthlyM2[y][i]);
-        vals.m1.push(monthlyM1[y][i]);
-        vals.kartal.push(monthlyKartal[y][i]);
-        vals.giral.push(monthlyGiral[y][i]);
-      });
-    });
+    const vals = { m2:[],m1:[],kartal:[],giral:[] };
+    years.forEach(y => { months.forEach((m,i) => { labels.push(`${m} ${y}`); vals.m2.push(monthlyM2[y][i]); vals.m1.push(monthlyM1[y][i]); vals.kartal.push(monthlyKartal[y][i]); vals.giral.push(monthlyGiral[y][i]); }); });
     const datasets = [...activeComps].filter(k => k !== 'kuasi').map(k => ({
-      label: compConfig[k].label,
-      data: vals[k],
-      borderColor: compConfig[k].color,
-      backgroundColor: compConfig[k].color + '18',
-      borderWidth: 1.5,
-      pointRadius: 0,
-      tension: 0.3,
+      label: compConfig[k].label, data: vals[k], borderColor: compConfig[k].color, backgroundColor: compConfig[k].color + '18', borderWidth: 1.5, pointRadius: 0, tension: 0.3, fill: false
     }));
     return { labels, datasets };
   }
@@ -875,18 +940,8 @@ function initTrendChart() {
   const { labels, datasets } = buildTrendDatasets();
   const ctx = document.getElementById('trendChart').getContext('2d');
   trendChart = new Chart(ctx, {
-    type: 'line',
-    data: { labels, datasets },
-    options: {
-      ...CHART_DEFAULTS,
-      plugins: {
-        ...CHART_DEFAULTS.plugins,
-        tooltip: {
-          ...CHART_DEFAULTS.plugins.tooltip,
-          callbacks: { label: ctx => `  ${ctx.dataset.label}: ${ctx.parsed.y ? ctx.parsed.y.toLocaleString('id-ID') + ' M Rp' : '-'}` }
-        }
-      }
-    }
+    type: 'line', data: { labels, datasets },
+    options: { ...CHART_DEFAULTS, plugins: { ...CHART_DEFAULTS.plugins, tooltip: { ...CHART_DEFAULTS.plugins.tooltip, callbacks: { label: ctx => `  ${ctx.dataset.label}: ${ctx.parsed.y ? ctx.parsed.y.toLocaleString('id-ID') + ' M Rp' : '-'}` } } } }
   });
 }
 
@@ -894,15 +949,7 @@ function initDonut() {
   const ctx = document.getElementById('donutChart').getContext('2d');
   donutChart = new Chart(ctx, {
     type: 'doughnut',
-    data: {
-      labels: donutData.labels,
-      datasets: [{
-        data: donutData.values,
-        backgroundColor: donutData.colors.map(c => c + 'cc'),
-        borderColor: donutData.colors,
-        borderWidth: 1.5,
-      }]
-    },
+    data: { labels: donutData.labels, datasets: [{ data: donutData.values, backgroundColor: donutData.colors.map(c => c + 'cc'), borderColor: donutData.colors, borderWidth: 1.5 }] },
     options: { cutout: '70%', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
   });
   const total = donutData.values.reduce((a,b)=>a+b,0);
@@ -921,129 +968,52 @@ function initGrowthChart() {
 
 function updateGrowthChart() {
   let data = annualData;
-  if (rangeYears > 0) {
-      // Need prev year for growth calc, so fetch minYear - 1
-      const minYear = 2025 - rangeYears + 1;
-      data = annualData.filter(d => d.year >= minYear - 1);
-  }
+  if (rangeYears > 0) data = annualData.filter(d => d.year >= (2025 - rangeYears));
   const labels = data.slice(1).map(d => d.year.toString());
   const growths = data.slice(1).map((d, i) => parseFloat(growth(d.m2, data[i].m2)));
-  
-  growthChart.data = {
-    labels,
-    datasets: [{
-      label: 'Pertumbuhan M2 YoY (%)',
-      data: growths,
-      backgroundColor: growths.map(g => g >= 0 ? 'rgba(56,217,192,0.6)' : 'rgba(241,107,107,0.6)'),
-      borderColor: growths.map(g => g >= 0 ? '#38d9c0' : '#f16b6b'),
-      borderWidth: 1, borderRadius: 4,
-    }]
-  };
+  growthChart.data = { labels, datasets: [{ label: 'Pertumbuhan M2 YoY (%)', data: growths, backgroundColor: growths.map(g => g >= 0 ? 'rgba(56,217,192,0.6)' : 'rgba(241,107,107,0.6)'), borderColor: growths.map(g => g >= 0 ? '#38d9c0' : '#f16b6b'), borderWidth: 1, borderRadius: 4 }] };
   growthChart.update();
 }
 
 function initCompareChart() {
   const years = [2021,2022,2023,2024,2025];
   const labels = [], kartal = [], giral = [];
-  years.forEach(y => {
-    months.forEach((m,i) => {
-      labels.push((m === 'Jan' || m === 'Jul') ? `${m}'${String(y).slice(2)}` : '');
-      kartal.push(monthlyKartal[y][i]);
-      giral.push(monthlyGiral[y][i]);
-    });
-  });
+  years.forEach(y => { months.forEach((m,i) => { labels.push((m === 'Jan' || m === 'Jul') ? `${m}'${String(y).slice(2)}` : ''); kartal.push(monthlyKartal[y][i]); giral.push(monthlyGiral[y][i]); }); });
   const ctx = document.getElementById('compareChart').getContext('2d');
   compareChart = new Chart(ctx, {
     type: 'line',
-    data: {
-      labels,
-      datasets: [
-        { label: 'Uang Kartal', data: kartal, borderColor: '#f5b84c', backgroundColor: '#f5b84c18', borderWidth: 1.8, pointRadius: 0, fill: true, tension: 0.3 },
-        { label: 'Uang Giral', data: giral, borderColor: '#38d9c0', backgroundColor: '#38d9c018', borderWidth: 1.8, pointRadius: 0, fill: true, tension: 0.3 }
-      ]
-    },
+    data: { labels, datasets: [ { label: 'Uang Kartal', data: kartal, borderColor: '#f5b84c', backgroundColor: '#f5b84c18', borderWidth: 1.8, pointRadius: 0, fill: true, tension: 0.3 }, { label: 'Uang Giral', data: giral, borderColor: '#38d9c0', backgroundColor: '#38d9c018', borderWidth: 1.8, pointRadius: 0, fill: true, tension: 0.3 } ] },
     options: { ...CHART_DEFAULTS, plugins: { ...CHART_DEFAULTS.plugins, legend: { display: true, position: 'top', align: 'end', labels: { color: '#7a84a0', font: { size:10 } } } } }
   });
 }
 
-// NEW: Liquidity Chart
 function getLiquidityData() {
   const data = getFilteredAnnualData();
-  return {
-    labels: data.map(d => d.year.toString()),
-    datasets: [{
-      label: 'Rasio Likuiditas (M1/M2)',
-      data: data.map(d => (d.m1 / d.m2 * 100)),
-      borderColor: '#dc66cc',
-      backgroundColor: '#dc66cc18',
-      borderWidth: 2, pointRadius: 3, fill: true, tension: 0.4
-    }]
-  };
+  return { labels: data.map(d => d.year.toString()), datasets: [{ label: 'Rasio Likuiditas (M1/M2)', data: data.map(d => (d.m1 / d.m2 * 100)), borderColor: '#dc66cc', backgroundColor: '#dc66cc18', borderWidth: 2, pointRadius: 3, fill: true, tension: 0.4 }] };
 }
 
 function initLiquidityChart() {
   const ctx = document.getElementById('liquidityChart').getContext('2d');
-  liquidityChart = new Chart(ctx, {
-    type: 'line',
-    data: getLiquidityData(),
-    options: {
-      ...CHART_DEFAULTS,
-      scales: { y: { ...CHART_DEFAULTS.scales.y, ticks: { ...CHART_DEFAULTS.scales.y.ticks, callback: v => v + '%' } } },
-      plugins: {
-         ...CHART_DEFAULTS.plugins,
-         tooltip: { ...CHART_DEFAULTS.plugins.tooltip, callbacks: { label: ctx => `  Rasio: ${ctx.parsed.y.toFixed(1)}%` } }
-      }
-    }
-  });
+  liquidityChart = new Chart(ctx, { type: 'line', data: getLiquidityData(), options: { ...CHART_DEFAULTS, scales: { y: { ...CHART_DEFAULTS.scales.y, ticks: { ...CHART_DEFAULTS.scales.y.ticks, callback: v => v + '%' } } }, plugins: { ...CHART_DEFAULTS.plugins, tooltip: { ...CHART_DEFAULTS.plugins.tooltip, callbacks: { label: ctx => `  Rasio: ${ctx.parsed.y.toFixed(1)}%` } } } } });
 }
 
-// NEW: Forecast Chart (CAGR)
 function initForecastChart() {
-  const baseYear = 2020;
-  const endYear = 2025;
-  const valBase = annualData.find(d => d.year === baseYear).m2;
-  const valEnd = annualData.find(d => d.year === endYear).m2;
-  const cagr = Math.pow(valEnd / valBase, 1/5) - 1; // 5-yr CAGR
+  const valBase = annualData.find(d => d.year === 2020).m2;
+  const valEnd = annualData.find(d => d.year === 2025).m2;
+  const cagr = Math.pow(valEnd / valBase, 1/5) - 1;
+  const labels = [], histData = [], projData = [];
 
-  const labels = [];
-  const histData = [];
-  const projData = [];
-
-  // Show last 5 years
-  annualData.filter(d => d.year >= 2021).forEach(d => {
-     labels.push(d.year.toString());
-     histData.push(d.m2);
-     projData.push(null);
-  });
-
-  projData[projData.length - 1] = valEnd; // connect line
+  annualData.filter(d => d.year >= 2021).forEach(d => { labels.push(d.year.toString()); histData.push(d.m2); projData.push(null); });
+  projData[projData.length - 1] = valEnd;
 
   let currentVal = valEnd;
-  for(let i=1; i<=5; i++) {
-     currentVal *= (1 + cagr);
-     labels.push((endYear + i).toString());
-     histData.push(null);
-     projData.push(currentVal);
-  }
+  for(let i=1; i<=5; i++) { currentVal *= (1 + cagr); labels.push((2025 + i).toString()); histData.push(null); projData.push(currentVal); }
 
   const ctx = document.getElementById('forecastChart').getContext('2d');
   forecastChart = new Chart(ctx, {
     type: 'line',
-    data: {
-      labels,
-      datasets: [
-        { label: 'Historis (M2)', data: histData, borderColor: '#f5b84c', borderWidth: 2, tension: 0.3, pointRadius: 3 },
-        { label: 'Proyeksi (CAGR 5Th)', data: projData, borderColor: '#38d9c0', borderDash: [5, 5], borderWidth: 2, tension: 0.3, pointRadius: 3, pointBackgroundColor: '#06091a' }
-      ]
-    },
-    options: {
-       ...CHART_DEFAULTS,
-       plugins: {
-         ...CHART_DEFAULTS.plugins,
-         legend: { display: true, labels: { color: '#7a84a0', font: { family:'Sora', size:10 } } },
-         tooltip: { ...CHART_DEFAULTS.plugins.tooltip, callbacks: { label: ctx => `  ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString('id-ID', {maximumFractionDigits:0})} M Rp` } }
-       }
-    }
+    data: { labels, datasets: [ { label: 'Historis (M2)', data: histData, borderColor: '#f5b84c', borderWidth: 2, tension: 0.3, pointRadius: 3 }, { label: 'Proyeksi (CAGR 5Th)', data: projData, borderColor: '#38d9c0', borderDash: [5, 5], borderWidth: 2, tension: 0.3, pointRadius: 3, pointBackgroundColor: '#06091a' } ] },
+    options: { ...CHART_DEFAULTS, plugins: { ...CHART_DEFAULTS.plugins, legend: { display: true, labels: { color: '#7a84a0', font: { family:'Sora', size:10 } } }, tooltip: { ...CHART_DEFAULTS.plugins.tooltip, callbacks: { label: ctx => `  ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString('id-ID', {maximumFractionDigits:0})} M Rp` } } } }
   });
 }
 
@@ -1054,7 +1024,6 @@ function buildTable() {
   const body = document.getElementById('tableBody');
   const q = document.getElementById('searchBox').value.toLowerCase();
   const maxM2 = Math.max(...annualData.map(d => d.m2));
-  
   let rows = [...annualData].filter(d => String(d.year).includes(q));
 
   rows.sort((a,b) => {
@@ -1087,11 +1056,7 @@ function buildTable() {
 function sortTable(col) {
   if (sortCol === col) sortAsc = !sortAsc;
   else { sortCol = col; sortAsc = col === 0 ? false : true; }
-  document.querySelectorAll('th').forEach((th,i) => {
-    th.classList.toggle('sorted', i === col);
-    const icon = th.querySelector('.sort-icon');
-    if (icon) icon.textContent = i === col ? (sortAsc ? '↑' : '↓') : '↕';
-  });
+  document.querySelectorAll('th').forEach((th,i) => { th.classList.toggle('sorted', i === col); const icon = th.querySelector('.sort-icon'); if (icon) icon.textContent = i === col ? (sortAsc ? '↑' : '↓') : '↕'; });
   buildTable();
 }
 
@@ -1107,33 +1072,21 @@ function setRange(yr) {
     else if (['5 Th','10 Th','Semua'].includes(txt)) b.classList.remove('active');
   });
   
-  // Update connected charts
   const { labels, datasets } = buildTrendDatasets();
-  trendChart.data.labels = labels;
-  trendChart.data.datasets = datasets;
-  trendChart.update();
-  
+  trendChart.data.labels = labels; trendChart.data.datasets = datasets; trendChart.update();
   updateGrowthChart();
-  
-  if (liquidityChart) {
-    liquidityChart.data = getLiquidityData();
-    liquidityChart.update();
-  }
+  if (liquidityChart) { liquidityChart.data = getLiquidityData(); liquidityChart.update(); }
 }
 
 function toggleComp(k) {
   if (activeComps.has(k)) {
     if (activeComps.size === 1) return;
-    activeComps.delete(k);
-    document.getElementById('btn-'+k).classList.remove('active');
+    activeComps.delete(k); document.getElementById('btn-'+k).classList.remove('active');
   } else {
-    activeComps.add(k);
-    document.getElementById('btn-'+k).classList.add('active');
+    activeComps.add(k); document.getElementById('btn-'+k).classList.add('active');
   }
   const { labels, datasets } = buildTrendDatasets();
-  trendChart.data.labels = labels;
-  trendChart.data.datasets = datasets;
-  trendChart.update();
+  trendChart.data.labels = labels; trendChart.data.datasets = datasets; trendChart.update();
 }
 
 function setChartMode(mode, el) {
@@ -1141,32 +1094,17 @@ function setChartMode(mode, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   const { labels, datasets } = buildTrendDatasets();
-  trendChart.data.labels = labels;
-  trendChart.data.datasets = datasets;
-  trendChart.update();
+  trendChart.data.labels = labels; trendChart.data.datasets = datasets; trendChart.update();
 }
 
 // ═══════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
-  initTrendChart();
-  initDonut();
-  initGrowthChart();
-  initCompareChart();
-  initLiquidityChart();
-  initForecastChart();
-  buildTable();
-
-  // Animate KPI numbers
+  initTrendChart(); initDonut(); initGrowthChart(); initCompareChart(); initLiquidityChart(); initForecastChart(); buildTable();
   document.querySelectorAll('.kpi-value').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(8px)';
-    el.style.transition = 'opacity .5s, transform .5s';
-    setTimeout(() => {
-      el.style.opacity = '1';
-      el.style.transform = 'none';
-    }, 100);
+    el.style.opacity = '0'; el.style.transform = 'translateY(8px)'; el.style.transition = 'opacity .5s, transform .5s';
+    setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'none'; }, 100);
   });
 });
 </script>
